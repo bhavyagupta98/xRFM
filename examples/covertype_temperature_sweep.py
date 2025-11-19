@@ -18,6 +18,10 @@ TEMPERATURES = [None] + list(np.logspace(np.log10(0.05), np.log10(3), num=20))
 def prepare_data(device: torch.device):
     X, y = fetch_covtype(return_X_y=True)
     y = y.astype(np.int64) - 1  # convert to 0-based class labels
+    print(f"X.shape: {X.shape}, y.shape: {y.shape}")
+    print(f"X.head(): {X.head()}")
+    print(f"y.head(): {y.head()}")
+
 
     total_required = TOTAL_TRAIN + TOTAL_VAL + TOTAL_TEST
     if total_required > len(X):
@@ -78,36 +82,36 @@ def main():
     X_train, y_train, X_val, y_val, X_test, y_test = prepare_data(device)
     y_test_numpy = y_test.cpu().numpy()
 
-    model = build_model(device)
+    # model = build_model(device)
 
-    print("Fitting xRFM...")
-    start_time = time.time()
-    model.fit(X_train, y_train, X_val, y_val)
-    fit_time = time.time() - start_time
-    print(f"Training completed in {fit_time:.2f} seconds.")
+    # print("Fitting xRFM...")
+    # start_time = time.time()
+    # model.fit(X_train, y_train, X_val, y_val)
+    # fit_time = time.time() - start_time
+    # print(f"Training completed in {fit_time:.2f} seconds.")
 
-    accuracies = []
-    temperature_labels = []
-    x_positions = np.arange(len(TEMPERATURES))
+    # accuracies = []
+    # temperature_labels = []
+    # x_positions = np.arange(len(TEMPERATURES))
 
-    for temperature in TEMPERATURES:
-        if temperature is None:
-            model.split_temperature = None
-            temp_label = "hard routing"
-        else:
-            model.split_temperature = float(temperature)
-            temp_label = f"{temperature:.3f}"
+    # for temperature in TEMPERATURES:
+    #     if temperature is None:
+    #         model.split_temperature = None
+    #         temp_label = "hard routing"
+    #     else:
+    #         model.split_temperature = float(temperature)
+    #         temp_label = f"{temperature:.3f}"
 
-        start_time = time.time()
-        preds = model.predict(X_test)
-        predict_time = time.time() - start_time
+    #     start_time = time.time()
+    #     preds = model.predict(X_test)
+    #     predict_time = time.time() - start_time
         
-        if isinstance(preds, torch.Tensor):
-            preds = preds.cpu().numpy()
-        correct = (preds == y_test_numpy).mean()
-        accuracies.append(correct)
-        temperature_labels.append(temp_label)
-        print(f"Temperature {temp_label}: test accuracy = {correct:.4f}, predict time = {predict_time:.2f} seconds")
+    #     if isinstance(preds, torch.Tensor):
+    #         preds = preds.cpu().numpy()
+    #     correct = (preds == y_test_numpy).mean()
+    #     accuracies.append(correct)
+    #     temperature_labels.append(temp_label)
+    #     print(f"Temperature {temp_label}: test accuracy = {correct:.4f}, predict time = {predict_time:.2f} seconds")
 
 
 if __name__ == "__main__":
