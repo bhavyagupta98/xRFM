@@ -26,7 +26,7 @@ DEFAULT_TOTAL_TRAIN = 50_000
 DEFAULT_TOTAL_VAL = 10_000
 DEFAULT_TOTAL_TEST = 10_000
 DEFAULT_MIN_SUBSET_SIZE = 20_000
-DEFAULT_DATA_PATH = os.path.expanduser("~/Desktop/kaggle/numerai_training_data.csv")
+DEFAULT_DATA_PATH = os.path.expanduser("data/numerai_training_data.csv")
 
 
 def parse_args():
